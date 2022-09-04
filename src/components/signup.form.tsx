@@ -1,6 +1,7 @@
 import { Button, TextField } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useCreateUserMutation } from '../api/users.api';
 
 const Signup: React.FC = () => {
   const [name, setName] = React.useState<string>();
@@ -15,8 +16,16 @@ const Signup: React.FC = () => {
   const [passwordConfirmation, setPasswordConfirmation] = React.useState<string>('');
   const [passwordConfirmationError, setPasswordConfirmationError] = React.useState<boolean>(false);
 
+const [createUser] = useCreateUserMutation()
+  const body: any ={
+    firstName: name,
+    lastName: lastname,
+    email: email,
+    password: password,
+  }
+
   //Handler
-  const handleSignup = () => {
+  const handleSignup = async() => {
     if (!name || !lastname || !email || !password || !passwordConfirmation) {
       return alert('Please fill all the fields');
     }
@@ -27,6 +36,7 @@ const Signup: React.FC = () => {
       setPasswordConfirmationError(true);
       return;
     }
+    await createUser(body)
   };
   return (
     <div className="flex justify-center items-center flex-col h-screen gap-8">
